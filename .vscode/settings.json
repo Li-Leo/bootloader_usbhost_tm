@@ -1,0 +1,28 @@
+{
+    "files.associations": {
+    },
+    "files.exclude":
+    {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        // "**/**/pwm": true,
+        "**/DebugConfig": true,
+        "**/RTE": true,
+        // "**/MDK-ARM": false
+        "**/*.map":false,
+        "**/*.d":true,
+        "**/*.crf":true,
+        "**/*.o":true,
+    },
+
+    "search.exclude": {
+        "**/*.uvoptx": true,
+        "**/*.uvprojx": true,
+        "**/*.o": true,
+        "**/*.map": true,
+    },
+}
