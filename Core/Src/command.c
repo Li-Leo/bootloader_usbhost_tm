@@ -25,7 +25,8 @@
 /* Private typedef ----------------------------------------------------------- */
 /* Private defines ----------------------------------------------------------- */
 #define UPLOAD_FILENAME            "0:UPLOAD.bin"
-#define DOWNLOAD_FILENAME          "0:tm_image.bin"
+#define DOWNLOAD_FILENAME          "tm_image.bin"
+#define FILENAME                   "TM_IMAGE.BIN"
 
 /* Private macros ------------------------------------------------------------ */
 /* Private variables --------------------------------------------------------- */
@@ -44,6 +45,7 @@ extern USBH_HandleTypeDef hUsbHostFS;
 /* Private function prototypes ----------------------------------------------- */
 static void COMMAND_ProgramFlashMemory(void);
 void find_bin_file(const char *name);
+FRESULT find_file(const TCHAR* path, const TCHAR* ext, TCHAR* foundFile);
 
 /* Private functions --------------------------------------------------------- */
 
@@ -122,9 +124,16 @@ void COMMAND_Upload(void)
   */
 void COMMAND_Download(void)
 {
-  char file_name[] = "tm_image*.bin"; 
+  char file_name[13] = {0};
 
-  find_bin_file(file_name);
+  find_file("", ".bin", file_name);
+
+  if (strcmp(file_name, FILENAME) == 0) {
+    printf("find_file bin %s\n", file_name);
+  } else {
+    printf("no bin file\n");
+    return;
+  }
   
   /* Open the binary file to be downloaded */
   if (f_open(&down_load_file, DOWNLOAD_FILENAME, FA_OPEN_EXISTING | FA_READ) == FR_OK)
@@ -148,6 +157,7 @@ void COMMAND_Download(void)
 
       /* Close file */
       f_close(&down_load_file);
+      printf("pragrammed done\n");
     }
   }
   else
@@ -236,4 +246,154 @@ void find_bin_file(const char *name)
     f_closedir(&dj);
 }
 
+FRESULT find_file(const TCHAR* path, const TCHAR* ext, TCHAR* foundFile)
+{
+  DIR dir;
+  FILINFO fileInfo;
+  FRESULT res;
+  int len=0;
+  // Open directory
+  res = f_opendir(&dir, path);
+  if (res != FR_OK) {
+      return res;
+  }
+
+  // Traverse directory
+  while (1) {
+      // Read directory entry
+      res = f_readdir(&dir, &fileInfo);
+      if (res != FR_OK || fileInfo.fname[0] == 0) {
+          // End of directory or error, break loop
+          break;
+      }
+
+      // Ignore hidden files and directories
+      if (fileInfo.fattrib & AM_HID) {
+          continue;
+      }
+      // printf("%s;%d;\n",fileInfo.fname,strlen(fileInfo.fname));
+      // printf("%s;%d;\n",fileInfo.fname,sizeof(fileInfo.fname));
+      
+      // Check file extension
+      //if (fileInfo.fattrib & AM_ARC && strcmp(fileInfo.fname + strlen(fileInfo.fname) - 3, ext) == 0) 
+      len = strlen(fileInfo.fname);
+      if (len >= 4 && strcasecmp(fileInfo.fname + len - 4, ext) == 0)         
+      {
+          // Print file name
+          printf("%s\r\n", fileInfo.fname);
+          strncpy(foundFile, fileInfo.fname, sizeof(fileInfo.fname));
+          foundFile[sizeof(fileInfo.fname) - 1] = '\0';        
+      }
+  }
+
+  // Close directory
+  f_closedir(&dir);
+
+  return FR_OK;
+}
+
+FRESULT listFiles(const TCHAR* path)
+{
+  DIR dir;
+  FILINFO fileInfo;
+  FRESULT res;
+
+  // Open directory
+  res = f_opendir(&dir, path);
+  if (res != FR_OK) {
+      return res;
+  }
+
+  // Traverse directory
+  while (1) {
+      // Read directory entry
+      res = f_readdir(&dir, &fileInfo);
+      if (res != FR_OK || fileInfo.fname[0] == 0) {
+          // End of directory or error, break loop
+          break;
+      }
+
+      // Ignore hidden files and directories
+      if (fileInfo.fattrib & AM_HID) {
+          continue;
+      }
+
+      // Print file name
+      if (fileInfo.fattrib & AM_DIR) {
+          // Directory
+          printf("[%s]\r\n", fileInfo.fname);
+      } else {
+          // File
+          printf("%s\r\n", fileInfo.fname);
+      }
+  }
+
+  // Close directory
+  f_closedir(&dir);
+
+  return FR_OK;
+}
+ 
+// Find files with .bin extension in the root directory
+// findFiles("/", "bin");
+FRESULT findFiles(const TCHAR* path, const TCHAR* ext) 
+{
+  DIR dir;
+  FILINFO fileInfo;
+  FRESULT res;
+  int len=0;
+  // Open directory
+  res = f_opendir(&dir, path);
+  if (res != FR_OK) {
+      return res;
+  }
+
+  // Traverse directory
+  while (1) {
+      // Read directory entry
+      res = f_readdir(&dir, &fileInfo);
+      if (res != FR_OK || fileInfo.fname[0] == 0) {
+          // End of directory or error, break loop
+          break;
+      }
+
+      // Ignore hidden files and directories
+      if (fileInfo.fattrib & AM_HID) {
+          continue;
+      }
+      printf("%s;%d;\n",fileInfo.fname,strlen(fileInfo.fname));
+      printf("%s;%d;\n",fileInfo.fname,sizeof(fileInfo.fname));
+      printf("ext:%s;%d;\n",ext,strlen(ext));
+      // Check file extension
+      //if (fileInfo.fattrib & AM_ARC && strcmp(fileInfo.fname + strlen(fileInfo.fname) - 3, ext) == 0) 
+      len = strlen(fileInfo.fname);
+      if (len >= 4 && strcasecmp(fileInfo.fname + len - 4, ext) == 0)         
+      {
+          // Print file name
+          printf("%s\r\n", fileInfo.fname);
+      }
+  }
+
+  // Close directory
+  f_closedir(&dir);
+
+  return FR_OK;
+}
+ 
+void openFile(const TCHAR* path)
+{
+  FIL file;
+  FRESULT res;
+
+  res = f_open(&file, path, FA_READ);
+  if (res == FR_OK) {
+      // open success
+      // ...
+      
+      f_close(&file);
+  } else {
+      // open false
+      // ...
+  }
+}
 

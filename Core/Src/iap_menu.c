@@ -67,17 +67,14 @@ void FW_UPGRADE_Process(void)
     break;
 
   case IAP_STATE:
-    while (USBH_MSC_IsReady(&hUsbHostFS))
-    {
+    while (USBH_MSC_IsReady(&hUsbHostFS)) {
       /* Control BUFFER_SIZE value */
       USBH_USR_BufferSizeControl();
 
-      printf("start programming\n");
       FLASH_If_FlashUnlock();
 
       /* Writes Flash memory */
       COMMAND_Download();
-      printf("pragrammed done\n");
 
       // IAP_UploadTimeout();
 
@@ -86,20 +83,19 @@ void FW_UPGRADE_Process(void)
       {
         /* Reads all flash memory */
         COMMAND_Upload();
-        printf("upload done!\n");
+        // printf("upload done!\n");
       }
       else
       {
-
         HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
         // printf("not upload done!\n");
       }
 
-
       /* Waiting USER Button Released */
       while (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) == GPIO_PIN_RESET && (Appli_state == APPLICATION_READY))
       {
-        HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+        HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+        HAL_Delay(200);
       }
 
       if (Appli_state == APPLICATION_READY)
@@ -117,8 +113,8 @@ void FW_UPGRADE_Process(void)
   if (Appli_state == APPLICATION_DISCONNECT)
   {
     /* Toggle LED3: USB device disconnected */
-    // BSP_LED_Toggle(LED4);
-    HAL_Delay(100);
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+    HAL_Delay(1000);
   }
 }
 

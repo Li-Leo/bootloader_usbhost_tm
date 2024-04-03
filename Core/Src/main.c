@@ -121,8 +121,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     FW_UPGRADE_Process();
-    // HAL_Delay(100);
-    // HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
   }
   /* USER CODE END 3 */
 }

@@ -50,7 +50,7 @@ for the Firmware upgrade code */
 // __enable_irq();
 
 /* Last Page Address */
-#define USER_FLASH_LAST_PAGE_ADDRESS  0x0805FFFF - 4
+#define USER_FLASH_LAST_PAGE_ADDRESS  0x080FFFFF - 4
 
 /* Define the user application size */
 #define USER_FLASH_SIZE   (USER_FLASH_LAST_PAGE_ADDRESS - APPLICATION_ADDRESS + 1)
