@@ -26,7 +26,7 @@
 /* Private defines ----------------------------------------------------------- */
 #define UPLOAD_FILENAME            "0:UPLOAD.bin"
 #define DOWNLOAD_FILENAME          "tm_image.bin"
-#define FILENAME                   "TM_IMAGE.BIN"
+#define FILENAME_TO_FIND            "TM_IMAGE.BIN"
 
 /* Private macros ------------------------------------------------------------ */
 /* Private variables --------------------------------------------------------- */
@@ -128,8 +128,8 @@ void COMMAND_Download(void)
 
   find_file("", ".bin", file_name);
 
-  if (strcmp(file_name, FILENAME) == 0) {
-    printf("find_file bin %s\n", file_name);
+  if (strcmp(file_name, FILENAME_TO_FIND) == 0) {
+    printf("find .bin file:%s\n", file_name);
   } else {
     printf("no bin file\n");
     return;
@@ -227,7 +227,7 @@ static void COMMAND_ProgramFlashMemory(void)
     LastPGAddress += TmpReadSize;
   }
 
-  printf("total_size=%lu\n", total_size);
+  printf("write bytes=%lu\n", total_size);
 }
 
 void find_bin_file(const char *name)

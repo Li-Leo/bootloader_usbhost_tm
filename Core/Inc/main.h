@@ -62,7 +62,10 @@ void Error_Handler(void);
 #define LED_Pin GPIO_PIN_15
 #define LED_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
-
+void jump2app(void);
+void Fail_Handler(void);
+void Erase_Fail_Handler(void);
+void FatFs_Fail_Handler(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

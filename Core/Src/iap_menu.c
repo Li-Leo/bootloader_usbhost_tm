@@ -37,7 +37,7 @@ extern ApplicationTypeDef Appli_state;
 extern USBH_HandleTypeDef hUsbHostFS;
 
 /* Private function prototypes ----------------------------------------------- */
-static void IAP_UploadTimeout(void);
+// static void IAP_UploadTimeout(void);
 static void USBH_USR_BufferSizeControl(void);
 void FatFs_Fail_Handler(void);
 
@@ -60,7 +60,7 @@ void FW_UPGRADE_Process(void)
       /* Toggle LED3 and LED4 in infinite loop */
       FatFs_Fail_Handler();
     }
-    printf("mount ok\n");
+    // printf("mount ok\n");
 
     /* Go to IAP menu */
     g_state = IAP_STATE;
@@ -68,6 +68,7 @@ void FW_UPGRADE_Process(void)
 
   case IAP_STATE:
     while (USBH_MSC_IsReady(&hUsbHostFS)) {
+      
       /* Control BUFFER_SIZE value */
       USBH_USR_BufferSizeControl();
 
@@ -110,11 +111,11 @@ void FW_UPGRADE_Process(void)
     break;
   }
 
-  if (Appli_state == APPLICATION_DISCONNECT)
-  {
-    /* Toggle LED3: USB device disconnected */
-    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-    HAL_Delay(1000);
+  if (Appli_state == APPLICATION_IDLE) {
+    // printf("state: %d, %lu\n", Appli_state, HAL_GetTick());
+    if (HAL_GetTick() > 2000) {
+      jump2app();
+    }
   }
 }
 
@@ -123,39 +124,39 @@ void FW_UPGRADE_Process(void)
   * @param  None
   * @retval None
   */
-static void IAP_UploadTimeout(void)
-{
-  /* Check if KEY button is pressed */
-  if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, GPIO_PIN_10) == GPIO_PIN_RESET)
-  {
-    /* To execute the UPLOAD command the KEY button should be kept pressed 3s
-     * just after a board reset, at firmware startup */
-    HAL_Delay(5000);
+// static void IAP_UploadTimeout(void)
+// {
+//   /* Check if KEY button is pressed */
+//   if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, GPIO_PIN_10) == GPIO_PIN_RESET)
+//   {
+//     /* To execute the UPLOAD command the KEY button should be kept pressed 3s
+//      * just after a board reset, at firmware startup */
+//     HAL_Delay(5000);
 
-    if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, GPIO_PIN_10) == GPIO_PIN_RESET)
-    {
-      /* UPLOAD command will be executed immediately after completed execution
-       * of the DOWNLOAD command */
+//     if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, GPIO_PIN_10) == GPIO_PIN_RESET)
+//     {
+//       /* UPLOAD command will be executed immediately after completed execution
+//        * of the DOWNLOAD command */
 
-      UploadCondition = 0x01;
+//       UploadCondition = 0x01;
 
-      /* Turn LED3 and LED4 on : Upload condition Verified */
-      // BSP_LED_On(LED3);
-      // BSP_LED_On(LED4);
+//       /* Turn LED3 and LED4 on : Upload condition Verified */
+//       // BSP_LED_On(LED3);
+//       // BSP_LED_On(LED4);
 
-      /* Waiting USER Button Pressed */
-      while (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, GPIO_PIN_10) == GPIO_PIN_RESET)
-      {
-      }
+//       /* Waiting USER Button Pressed */
+//       while (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, GPIO_PIN_10) == GPIO_PIN_RESET)
+//       {
+//       }
 
-    }
-    else
-    {
-      /* Only the DOWNLOAD command is executed */
-      UploadCondition = 0x00;
-    }
-  }
-}
+//     }
+//     else
+//     {
+//       /* Only the DOWNLOAD command is executed */
+//       UploadCondition = 0x00;
+//     }
+//   }
+// }
 
 /**
   * @brief  Handles the program fail.
