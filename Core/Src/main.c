@@ -188,6 +188,8 @@ void jump2app(void)
 
     printf("jump 2 app\n");
     jump_fun();
+  } else {
+    Fail_Handler();
   }
 }
 
