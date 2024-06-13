@@ -80,12 +80,12 @@ int main(void)
 
   /* USER CODE BEGIN Init */
   /* Test if USER button is pressed */
-  if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET) {
+  if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
     /* Check Vector Table: Test if user code is programmed starting from
      * address "APPLICATION_ADDRESS" */
     HAL_Delay(100);
 
-    if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET) {
+    if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
       jump2app();
     }
 

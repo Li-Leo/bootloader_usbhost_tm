@@ -102,6 +102,18 @@ void FW_UPGRADE_Process(void)
       if (Appli_state == APPLICATION_READY)
       {
         /* Jump to user application code located in the internal Flash memory */
+        FLASH_EraseInitTypeDef FLASH_EraseInitStruct;
+        uint32_t SectorError = 0;
+
+        FLASH_EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+        FLASH_EraseInitStruct.Sector = FLASH_SECTOR_2;
+        FLASH_EraseInitStruct.NbSectors = 1;
+        FLASH_EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+
+        if (HAL_FLASHEx_Erase(&FLASH_EraseInitStruct, &SectorError) != HAL_OK) {
+
+        }
+        
         COMMAND_Jump();
       }
     }
