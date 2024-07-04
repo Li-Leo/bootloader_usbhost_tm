@@ -79,19 +79,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  /* Test if USER button is pressed */
-  if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
-    /* Check Vector Table: Test if user code is programmed starting from
-     * address "APPLICATION_ADDRESS" */
-    HAL_Delay(100);
-
-    if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
-      jump2app();
-    }
-
-  } else {
-    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-  }
 
   /* USER CODE END Init */
 
@@ -108,7 +95,19 @@ int main(void)
   MX_FATFS_Init();
   MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
+  /* Test if USER button is pressed */
+  if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
+    /* Check Vector Table: Test if user code is programmed starting from
+     * address "APPLICATION_ADDRESS" */
+    HAL_Delay(100);
 
+    if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
+      jump2app();
+    }
+
+  } else {
+    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */

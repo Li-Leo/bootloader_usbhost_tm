@@ -125,7 +125,7 @@ void FW_UPGRADE_Process(void)
 
   if (Appli_state == APPLICATION_IDLE) {
     // printf("state: %d, %lu\n", Appli_state, HAL_GetTick());
-    if (HAL_GetTick() > 2000) {
+    if (HAL_GetTick() > 4000) {
       jump2app();
     }
   }

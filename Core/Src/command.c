@@ -158,6 +158,13 @@ void COMMAND_Download(void)
       /* Close file */
       f_close(&down_load_file);
       printf("pragrammed done\n");
+
+      for (int i = 0; i < 3; i++) {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+        HAL_Delay(1000);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
+        HAL_Delay(1000);
+      }
     }
   }
   else
