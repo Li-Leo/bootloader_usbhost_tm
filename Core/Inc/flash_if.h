@@ -28,7 +28,7 @@
 #include "stm32f4xx_hal.h"
 
 /* Exported types ------------------------------------------------------------*/
-typedef  void (*fun_t)(void);
+typedef void (*fun_t)(void);
 
 /* Exported constants --------------------------------------------------------*/
 /* Define the flash memory start address */
@@ -42,7 +42,7 @@ for the Firmware upgrade code */
 /* Exported constants --------------------------------------------------------*/
 /* This value can be equal to (512 * x) according to RAM size availability with x=[1, 128]
    In this project x is fixed to 64 => 512 * 64 = 32768bytes = 32 Kbytes */
-#define BUFFER_SIZE        ((uint16_t)512 * 64)
+#define BUFFER_SIZE        ((uint32_t)512 * 64 * 2)   // 64kB
 
 // add to front at main() of app
 // NVIC_SetVectorTable (NVIC_VectTab_FLASH, 0xc000);

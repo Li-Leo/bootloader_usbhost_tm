@@ -849,12 +849,10 @@ interwork --depend=bootloader_usbhost\startup_stm32f407xx.d -obootloader_usbhos
 ARM Macro Assembler    Page 14 
 
 
-t\startup_stm32f407xx.o -I.\RTE\_bootloader_usbhost -I"C:\Users\jianliang li\Ap
-pData\Local\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include" -I"C:\Users\jianliang
- li\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.16.0\Drivers\CMSIS\Device\ST\S
-TM32F4xx\Include" --predefine="__UVISION_VERSION SETA 535" --predefine="_RTE_ S
-ETA 1" --predefine="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=start
-up_stm32f407xx.lst startup_stm32f407xx.s
+t\startup_stm32f407xx.o -I.\RTE\_bootloader_usbhost -IC:\Users\Jjinh\AppData\Lo
+cal\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include --predefine="__UVISION_VERSION
+ SETA 535" --predefine="_RTE_ SETA 1" --predefine="STM32F407xx SETA 1" --predef
+ine="_RTE_ SETA 1" --list=startup_stm32f407xx.lst startup_stm32f407xx.s
 
 
 

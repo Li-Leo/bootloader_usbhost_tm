@@ -223,7 +223,7 @@ void FatFs_Fail_Handler(void)
 static void USBH_USR_BufferSizeControl(void)
 {
   /* Control BUFFER_SIZE and limit this value to 32Kbyte maximum */
-  if ((BUFFER_SIZE % 4 != 0x00) || (BUFFER_SIZE / 4 > 8192))
+  if ((BUFFER_SIZE % 4 != 0x00) || (BUFFER_SIZE / 4 > 8192 * 2))
   {
     while (1)
     {

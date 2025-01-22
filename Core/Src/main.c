@@ -90,12 +90,15 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  // MX_GPIO_Init();
-  // MX_USART2_UART_Init();
+  MX_GPIO_Init();
+  MX_USART2_UART_Init();
   MX_FATFS_Init();
   MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
   /* Test if USER button is pressed */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+  HAL_Delay(100);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
   if (HAL_GPIO_ReadPin(LEFT_SW_GPIO_Port, LEFT_SW_Pin) != GPIO_PIN_RESET && *(uint32_t *)0x0800BFFC != 0x5A5A5A5A) {
     /* Check Vector Table: Test if user code is programmed starting from
      * address "APPLICATION_ADDRESS" */
@@ -171,22 +174,22 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-uint32_t jump_addr;
-fun_t jump_fun;
-
 void jump2app(void)
 {
+  uint32_t app_addr;
+  fun_t app_run;
+
   if ((((*(__IO uint32_t *) APPLICATION_ADDRESS) & 0xFF000000) == 0x20000000) || (((*(__IO uint32_t *) APPLICATION_ADDRESS) & 0xFF000000) == 0x10000000)) {
     /* Jump to user application */
-    jump_addr = *(__IO uint32_t *) (APPLICATION_ADDRESS + 4);
-    jump_fun = (fun_t) jump_addr;
+    app_addr = *(__IO uint32_t *) (APPLICATION_ADDRESS + 4);
+    app_run = (fun_t) app_addr;
     /* Initialize user application's Stack Pointer */
     __set_MSP(*(__IO uint32_t *) APPLICATION_ADDRESS);
-    __disable_irq();
+    // __disable_irq();
     NVIC_DisableIRQ(OTG_FS_IRQn);
 
-    printf("jump 2 app\n");
-    jump_fun();
+    printf("\nbootloader starts, jump 2 user app\n");
+    app_run();
   } else {
     Fail_Handler();
   }
